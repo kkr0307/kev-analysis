@@ -1,12 +1,13 @@
-"""One-off loader: reads the KEV CSV and upserts every row into MongoDB so
-the app can be run with DATA_SOURCE=mongo.
+"""One-off loader: reads the KEV JSON catalog and upserts every row into
+MongoDB so the app can be run with DATA_SOURCE=mongo.
 
 Usage:
-    python scripts/import_to_mongo.py [path/to/csv]
+    python scripts/import_to_mongo.py [path/to/json]
 
 Reads MONGO_URI / MONGO_DB / MONGO_COLLECTION from the environment (see
 .env.example), same as the Flask app.
 """
+import json
 import os
 import sys
 
@@ -16,16 +17,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-import pandas as pd
 from pymongo import MongoClient, UpdateOne
 
 from config import Config
 
 
 def main():
-    csv_path = sys.argv[1] if len(sys.argv) > 1 else Config.CSV_PATH
-    df = pd.read_csv(csv_path, dtype=str, keep_default_na=False)
-    records = df.to_dict(orient="records")
+    json_path = sys.argv[1] if len(sys.argv) > 1 else Config.JSON_PATH
+    with open(json_path, encoding="utf-8") as f:
+        payload = json.load(f)
+    records = payload["vulnerabilities"]
 
     client = MongoClient(Config.MONGO_URI, serverSelectionTimeoutMS=5000)
     collection = client[Config.MONGO_DB][Config.MONGO_COLLECTION]

@@ -1,8 +1,9 @@
-"""Loads the CISA KEV catalog (from CSV or MongoDB) into a pandas DataFrame,
+"""Loads the CISA KEV catalog (from JSON or MongoDB) into a pandas DataFrame,
 builds the derived columns the API needs, and exposes the aggregation /
 search helpers used by routes/api.py.
 """
 import ast
+import json
 import os
 
 import pandas as pd
@@ -65,10 +66,12 @@ def _parse_cwes(value):
     return [part.strip() for part in text.split(",") if part.strip()]
 
 
-def _load_from_csv(path):
+def _load_from_json(path):
     if not os.path.exists(path):
-        raise FileNotFoundError(f"KEV CSV file not found: {path}")
-    return pd.read_csv(path, dtype=str, keep_default_na=False)
+        raise FileNotFoundError(f"KEV JSON file not found: {path}")
+    with open(path, encoding="utf-8") as f:
+        payload = json.load(f)
+    return pd.DataFrame(payload["vulnerabilities"])
 
 
 def _load_from_mongo(uri, db_name, collection_name):
@@ -81,17 +84,18 @@ def _load_from_mongo(uri, db_name, collection_name):
 
 
 def load_raw_dataframe():
-    """The CSV in data/ is the primary source; MongoDB is used as a fallback
-    whenever the CSV is missing (desktop-friendly: works with zero setup)."""
+    """The JSON file in data/ is the primary source; MongoDB is used as a
+    fallback whenever the JSON is missing (desktop-friendly: works with zero
+    setup)."""
     if Config.DATA_SOURCE == "mongo":
         df = _load_from_mongo(Config.MONGO_URI, Config.MONGO_DB, Config.MONGO_COLLECTION)
     else:
         try:
-            df = _load_from_csv(Config.CSV_PATH)
+            df = _load_from_json(Config.JSON_PATH)
             if df.empty:
-                raise RuntimeError("CSV file is empty")
+                raise RuntimeError("JSON file is empty")
         except Exception as exc:
-            print(f"[kev_analysis] CSV unavailable ({exc}); falling back to MongoDB: {Config.MONGO_URI}")
+            print(f"[kev_analysis] JSON unavailable ({exc}); falling back to MongoDB: {Config.MONGO_URI}")
             df = _load_from_mongo(Config.MONGO_URI, Config.MONGO_DB, Config.MONGO_COLLECTION)
 
     for col in RAW_COLUMNS:

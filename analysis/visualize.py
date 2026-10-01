@@ -1,33 +1,12 @@
-"""시각화를 추가하는 곳입니다.
+"""(선택) matplotlib으로 대시보드용 PNG를 만들 때 쓰는 함수들입니다.
 
-파이썬 초보자를 위한 가이드는 README.md의 "나만의 시각화 추가하기" 절을
-참고하세요. 여기서는 핵심만 짧게 설명합니다.
+대시보드는 static/images/charts/i1.png ~ i6.png 파일만 봅니다. 자세한 사용법은
+README.md의 "나만의 시각화 추가하기"를 참고하세요.
 
-사용 방법
----------
-1. 이 파일에 함수를 하나 만듭니다. 함수 안에서는 analysis.kev_analysis에 있는
-   함수(get_dataframe, get_trends, get_vendor_stats, get_cwe_stats, ...)로
-   데이터를 가져와 원하는 대로 그래프를 그리면 됩니다.
-2. matplotlib으로 그렸다면 마지막에 fig_to_base64(fig)로 변환해서 반환하세요.
-   반환한 문자열을 템플릿에서
-       <img src="data:image/png;base64,{{ 결과 }}">
-   처럼 쓰면 그래프가 그대로 화면에 나타납니다.
-3. 꼭 matplotlib일 필요는 없습니다. plotly의 HTML, 표(HTML 문자열), 그냥
-   텍스트 요약 등 "결과"라고 부를 수 있는 것이면 무엇이든 함수가 반환하고,
-   템플릿에서 그 값을 그대로 출력하면 됩니다.
-4. 함수를 만들었으면 routes/main.py의 index()에서 호출해 템플릿으로
-   넘겨주고, templates/index.html의 해당 placeholder를 결과로 바꿔주세요.
-   (아래 example_monthly_trend()가 실제로 연결되어 있는 예시입니다.)
-
-REST API로 시각화하고 싶다면?
------------------------------
-자바스크립트(Chart.js, D3, ECharts 등)로 그리고 싶다면 이 파일을 쓰지 않아도
-됩니다. routes/api.py의 /api/trends, /api/vendors, /api/products, /api/cwes,
-/api/ransomware, /api/response-time 이 이미 JSON으로 같은 데이터를 제공합니다.
+파이썬으로 그리고 싶다면: 함수를 추가해 matplotlib figure를 반환하게 하고,
+아래 CHARTS 딕셔너리에 `"i2": 함수`처럼 등록한 뒤
+`python scripts/generate_charts.py`를 실행하세요.
 """
-import base64
-import io
-
 import matplotlib
 
 matplotlib.use("Agg")  # 화면(디스플레이) 없는 서버에서도 그래프를 그리기 위한 설정
@@ -67,23 +46,8 @@ def _use_korean_font():
 _use_korean_font()
 
 
-def fig_to_base64(fig):
-    """matplotlib figure를 <img> 태그에 바로 쓸 수 있는 base64 문자열로 바꿉니다.
-
-    사용 예:
-        fig, ax = plt.subplots()
-        ax.plot([1, 2, 3])
-        return fig_to_base64(fig)
-    """
-    buffer = io.BytesIO()
-    fig.savefig(buffer, format="png", bbox_inches="tight")
-    plt.close(fig)  # 메모리 누수를 막기 위해 그린 뒤에는 꼭 닫아줍니다.
-    buffer.seek(0)
-    return base64.b64encode(buffer.read()).decode("utf-8")
-
-
 def example_monthly_trend():
-    """예시: 월별 KEV 등록 추이를 선 그래프로 그립니다.
+    """예시: 월별 KEV 등록 추이를 선 그래프로 그려 matplotlib figure를 반환합니다.
 
     이 함수를 그대로 복사한 뒤 get_trends() 대신 get_vendor_stats(),
     get_cwe_stats(), get_ransomware_stats() 등을 넣으면 다른 차트도
@@ -103,7 +67,7 @@ def example_monthly_trend():
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
 
-    return fig_to_base64(fig)
+    return fig
 
 
 # ---------------------------------------------------------------------------
@@ -124,4 +88,12 @@ def example_monthly_trend():
 #     ax.set_title("벤더별 KEV 건수 Top 10")
 #     fig.tight_layout()
 #
-#     return fig_to_base64(fig)
+#     return fig
+#
+# CHARTS["i2"] = example_top_vendors
+
+
+# scripts/generate_charts.py가 읽는 목록입니다. 키는 i1 ~ i6 중에서 씁니다.
+CHARTS = {
+    "i1": example_monthly_trend,
+}

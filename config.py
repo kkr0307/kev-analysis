@@ -4,13 +4,13 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class Config:
-    # "csv" (default) or "mongo". CSV is primary; if it's missing or empty,
+    # "json" (default) or "mongo". JSON is primary; if it's missing or empty,
     # analysis/kev_analysis.py automatically falls back to MongoDB.
-    DATA_SOURCE = os.environ.get("DATA_SOURCE", "csv").strip().lower()
+    DATA_SOURCE = os.environ.get("DATA_SOURCE", "json").strip().lower()
 
-    CSV_PATH = os.environ.get(
-        "KEV_CSV_PATH",
-        os.path.join(BASE_DIR, "data", "known_exploited_vulnerabilities.csv"),
+    JSON_PATH = os.environ.get(
+        "KEV_JSON_PATH",
+        os.path.join(BASE_DIR, "data", "known_exploited_vulnerabilities.json"),
     )
 
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017")

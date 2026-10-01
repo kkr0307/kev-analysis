@@ -1,16 +1,30 @@
+import os
+
 from flask import Blueprint, render_template
 
-from analysis.visualize import example_monthly_trend
-
 main_bp = Blueprint("main", __name__)
+
+# static/images/charts/<키>.png 로 저장된 파일이 있으면 그 카드에 그대로
+# 보여줍니다. 파일이 없는 키는 템플릿이 자리표시자(placeholder)를 보여줍니다.
+CHARTS_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "static", "images", "charts",
+)
+
+
+def _available_charts():
+    if not os.path.isdir(CHARTS_DIR):
+        return set()
+    return {
+        os.path.splitext(name)[0]
+        for name in os.listdir(CHARTS_DIR)
+        if name.lower().endswith(".png")
+    }
 
 
 @main_bp.route("/")
 def index():
-    # analysis/visualize.py 의 예시 함수 하나를 실제로 연결해 둔 것입니다.
-    # 새 차트를 추가하면 여기서 호출하고 render_template에 넘겨주세요.
-    monthly_trend_chart = example_monthly_trend()
-    return render_template("index.html", monthly_trend_chart=monthly_trend_chart)
+    return render_template("index.html", charts=_available_charts())
 
 
 @main_bp.route("/vulnerabilities")

@@ -1,5 +1,31 @@
 {% extends "base.html" %}
 {% block title %}대시보드 · CISA KEV{% endblock %}
+
+{% macro chart_body(key, api) %}
+  {% if key in charts %}
+    <img class="chart-image" src="{{ url_for('static', filename='images/charts/' ~ key ~ '.png') }}" alt="{{ key }} 그래프">
+  {% else %}
+    <div class="chart-placeholder" data-api="{{ api }}">
+      <span>시각화 영역 (연동 예정)</span>
+      <code>GET {{ api }}</code>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro chart_card(key, title, api) %}
+  <div class="chart-card">
+    <h2>{{ title }}</h2>
+    {{ chart_body(key, api) }}
+  </div>
+{% endmacro %}
+
+{% macro chart_card_wide(key, title, api) %}
+  <section class="chart-card chart-card--wide">
+    <h2>{{ title }}</h2>
+    {{ chart_body(key, api) }}
+  </section>
+{% endmacro %}
+
 {% block content %}
 <h1 class="page-title">CISA 알려진 악용 취약점(KEV) 대시보드</h1>
 
@@ -27,58 +53,21 @@
 </section>
 
 <p class="dashboard-note">
-  아래 차트 영역은 원하는 시각화로 자유롭게 채우는 자리입니다. 파이썬으로 그리고
-  싶다면 <code>analysis/visualize.py</code>에 함수를 추가하세요 (첫 번째 차트가
-  실제 연결된 예시입니다). 자바스크립트로 그리고 싶다면 <code>GET /api/...</code>
-  엔드포인트가 같은 데이터를 JSON으로 제공합니다. 자세한 방법은 README의
+  아래 차트는 <code>static/images/charts/&lt;키&gt;.png</code> 파일이 있으면 그대로
+  보여주고, 없으면 연결 예정 API 안내로 대신 표시됩니다. 자세한 방법은 README의
   "나만의 시각화 추가하기"를 참고하세요.
 </p>
 
-<section class="chart-card chart-card--wide">
-  <h2>월별 KEV 등록 추이</h2>
-  <img class="chart-image" src="data:image/png;base64,{{ monthly_trend_chart }}"
-       alt="월별 KEV 등록 추이 그래프">
-  <p class="chart-source">analysis/visualize.py → example_monthly_trend() · 데이터: <code>GET /api/trends</code></p>
-</section>
+{{ chart_card_wide("i1", "월별 KEV 등록 추이", "/api/trends") }}
 
 <section class="chart-grid">
-  <div class="chart-card">
-    <h2>벤더별 KEV</h2>
-    <div class="chart-placeholder" data-api="/api/vendors">
-      <span>시각화 영역 (연동 예정)</span>
-      <code>GET /api/vendors</code>
-    </div>
-  </div>
-  <div class="chart-card">
-    <h2>랜섬웨어 연관 여부</h2>
-    <div class="chart-placeholder" data-api="/api/ransomware">
-      <span>시각화 영역 (연동 예정)</span>
-      <code>GET /api/ransomware</code>
-    </div>
-  </div>
-  <div class="chart-card">
-    <h2>제품별 KEV</h2>
-    <div class="chart-placeholder" data-api="/api/products">
-      <span>시각화 영역 (연동 예정)</span>
-      <code>GET /api/products</code>
-    </div>
-  </div>
-  <div class="chart-card">
-    <h2>CWE 분포</h2>
-    <div class="chart-placeholder" data-api="/api/cwes">
-      <span>시각화 영역 (연동 예정)</span>
-      <code>GET /api/cwes</code>
-    </div>
-  </div>
+  {{ chart_card("i2", "벤더별 KEV", "/api/vendors") }}
+  {{ chart_card("i3", "랜섬웨어 연관 여부", "/api/ransomware") }}
+  {{ chart_card("i4", "제품별 KEV", "/api/products") }}
+  {{ chart_card("i5", "CWE 분포", "/api/cwes") }}
 </section>
 
-<section class="chart-card chart-card--wide">
-  <h2>대응기간 분포</h2>
-  <div class="chart-placeholder" data-api="/api/response-time">
-    <span>시각화 영역 (연동 예정)</span>
-    <code>GET /api/response-time</code>
-  </div>
-</section>
+{{ chart_card_wide("i6", "대응기간 분포", "/api/response-time") }}
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>

@@ -3,10 +3,10 @@
 CISA(KEV) 카탈로그를 pandas로 가공해 KPI/집계/검색 JSON API로 제공하고, 대시보드/검색
 목록/CVE 상세 페이지를 렌더링합니다.
 
-**대시보드의 차트/시각화 영역은 의도적으로 빈 틀입니다.** 실제 차트
-구현은 별도 파트에서 진행하며, 각 영역이 쓸 데이터는 `/api/...` 엔드포인트에서 이미
-제공됩니다 (아래 API 표 참고). `templates/index.html`의 `.chart-placeholder`
-영역에 원하는 라이브러리로 차트를 붙이면 됩니다.
+**대시보드의 차트/시각화 영역은 의도적으로 빈 틀입니다.** `static/images/charts/`에
+정해진 이름의 PNG 파일을 넣기만 하면 해당 카드에 바로 표시됩니다 (아래 "새 차트나
+이미지 추가하기" 참고). 아직 파일이 없는 카드는 참고용으로 `/api/...` 엔드포인트
+안내를 보여줍니다 (아래 API 표 참고).
 
 ## 실행 방법 (데스크탑)
 
@@ -20,116 +20,46 @@ python app.py   # http://localhost:5000
 
 ## 새 차트나 이미지 추가하기
 
-### 방법 1: 파이썬으로 차트 추가하기
+`static/images/charts/` 폴더에 `i1.png` ~ `i6.png` 중 원하는 파일을 넣으면
+해당 카드에 그대로 표시됩니다. 파일이 없는 키는 자리표시자가 보입니다.
 
-이 프로젝트에는 `matplotlib`으로 차트를 만들고 웹페이지에 보여주는 예제가 있습니다. 새 차트도 같은 순서로 추가하면 됩니다.
+| 키 | 카드 |
+|---|---|
+| `i1` | 월별 KEV 등록 추이 |
+| `i2` | 벤더별 KEV |
+| `i3` | 랜섬웨어 연관 여부 |
+| `i4` | 제품별 KEV |
+| `i5` | CWE 분포 |
+| `i6` | 대응기간 분포 |
 
-1. `analysis/visualize.py`에 차트 함수를 만듭니다.
+카드 순서를 바꾸려면 `templates/index.html`에서 `chart_card(...)` /
+`chart_card_wide(...)` 호출 줄의 순서를 바꾸면 됩니다.
 
-   예를 들어 벤더별 취약점 상위 10개를 막대 그래프로 만들려면, 파일 아래쪽에 다음 함수를 추가합니다.
+### (선택) matplotlib으로 PNG 만들기
 
-   ```python
-   from analysis.kev_analysis import get_vendor_stats
+`analysis/visualize.py`에 matplotlib figure를 반환하는 함수를 추가하고
+`CHARTS` 딕셔너리에 `"i2": 함수`처럼 등록한 뒤 실행하면 PNG로 저장됩니다.
 
-   def top_vendors_chart():
-       data = get_vendor_stats(limit=10)
-       vendors = [row["vendor"] for row in data]
-       counts = [row["count"] for row in data]
+```bash
+python scripts/generate_charts.py
+```
 
-       fig, ax = plt.subplots(figsize=(8, 5))
-       ax.barh(vendors, counts)
-       ax.invert_yaxis()
-       ax.set_title("벤더별 KEV 건수 Top 10")
-       fig.tight_layout()
+### 자바스크립트로 직접 그리기
 
-       return fig_to_base64(fig)
-   ```
-
-   `get_vendor_stats()`는 벤더 이름과 건수를 가져옵니다. `ax.barh()`가 막대 그래프를 그리고, `fig_to_base64()`가 그래프를 웹페이지에 넣을 수 있는 이미지 데이터로 바꿉니다.
-
-2. `main.py`에서 함수를 가져오고, 대시보드 페이지를 만들 때 호출합니다.
-
-   ```python
-   from analysis.visualize import example_monthly_trend, top_vendors_chart
-   ```
-
-   기존 `index()` 함수 안에서 차트를 만들고 템플릿에 전달합니다.
-
-   ```python
-   def index():
-       monthly_trend_chart = example_monthly_trend()
-       vendors_chart = top_vendors_chart()
-       return render_template(
-           "index.html",
-           monthly_trend_chart=monthly_trend_chart,
-           vendors_chart=vendors_chart,
-       )
-   ```
-
-3. `index.html`에서 전달받은 차트를 표시합니다.
-
-   ```html
-   <img
-     src="data:image/png;base64,{{ vendors_chart }}"
-     alt="벤더별 KEV 건수 그래프"
-   >
-   ```
-
-   `vendors_chart`라는 이름은 `main.py`에서 템플릿에 전달한 이름과 같아야 합니다.
-
-4. Flask 서버를 실행하고 대시보드에서 그래프가 보이는지 확인합니다.
-
-   ```bash
-   python app.py
-   ```
-
-   이미 있는 월별 그래프도 같은 방식으로 만들어집니다. `visualize.py`의 `example_monthly_trend()`가 그래프를 만들고, `main.py`가 템플릿에 전달하며, `index.html`이 화면에 표시합니다.
-
-### 방법 2: JavaScript 차트 추가하기
-
-브라우저에서 차트를 그리려면 다음 순서로 작업합니다.
-
-1. `index.html`에서 원하는 `.chart-placeholder` 영역을 `<canvas>`로 바꿉니다.
-2. `dashboard.js`에서 `/api/trends`, `/api/vendors` 같은 API 주소에 요청해 데이터를 가져옵니다.
-3. 가져온 데이터를 차트 라이브러리에 전달해 `<canvas>`에 그립니다.
-
-이 방식은 차트 라이브러리 설정이 추가로 필요합니다. 처음 시작한다면 방법 1의 파이썬 차트부터 따라 해보세요. 차트에 필요한 데이터는 이미 `/api/...` API에서 제공됩니다.
-
-### 방법 3: 이미지 파일 추가하기
-
-사진이나 미리 만들어 둔 이미지 파일은 파이썬 코드 없이 넣을 수 있습니다.
-
-1. `static` 폴더 안에 `images` 폴더를 만들고 이미지 파일을 넣습니다.
-
-   ```text
-   static/
-     images/
-       example.png
-   ```
-
-2. 표시할 템플릿 파일에 이미지 태그를 추가합니다.
-
-   ```html
-   <img
-     src="{{ url_for('static', filename='images/example.png') }}"
-     alt="이미지 설명"
-   >
-   ```
-
-3. Flask 서버를 실행하고 해당 페이지에서 이미지가 보이는지 확인합니다.
-
-`static`은 브라우저에 제공하는 파일을 두는 폴더입니다. 이미지 파일은 `static/images/`에, 페이지 HTML은 `templates`에 둡니다.
+`index.html`의 `.chart-placeholder`를 `<canvas>`로 바꾸고,
+`dashboard.js`에서 `/api/...` 데이터를 받아 차트 라이브러리로 그리면 됩니다.
 
 
-## 데이터 소스: CSV 기본 + MongoDB 폴백
+## 데이터 소스: JSON 기본 + MongoDB 폴백
 
 `.env`의 `DATA_SOURCE`로 제어합니다.
 
-- `csv` (기본값) — `data/known_exploited_vulnerabilities.csv`(경로는 `KEV_CSV_PATH`로 조정 가능)에서 읽습니다.
-  **CSV 파일이 없거나 비어 있으면 자동으로 MongoDB(`MONGO_URI`/`MONGO_DB`/`MONGO_COLLECTION`)로 폴백**합니다.
+- `json` (기본값) — `data/known_exploited_vulnerabilities.json`(경로는 `KEV_JSON_PATH`로 조정 가능)에서 읽습니다.
+  이 파일은 [CISA KEV 카탈로그 JSON](https://github.com/cisagov/kev-data/blob/develop/known_exploited_vulnerabilities.json)과 동일한 형식(`{"vulnerabilities": [...]}`)입니다.
+  **JSON 파일이 없거나 비어 있으면 자동으로 MongoDB(`MONGO_URI`/`MONGO_DB`/`MONGO_COLLECTION`)로 폴백**합니다.
 - `mongo` — MongoDB만 사용하도록 강제합니다.
 
-MongoDB를 쓰려면 먼저 CSV를 한 번 적재하세요:
+MongoDB를 쓰려면 먼저 JSON을 한 번 적재하세요:
 
 ```bash
 python scripts/import_to_mongo.py
@@ -142,18 +72,21 @@ python scripts/import_to_mongo.py
 ## 프로젝트 구조
 
 ```
-app.py                     Flask 앱 생성/실행 엔트리포인트
-config.py                  DATA_SOURCE / CSV / Mongo 설정
-analysis/kev_analysis.py   CSV 또는 MongoDB 로딩, 전처리, 집계, 검색 로직
-routes/main.py             페이지 라우트 (/, /vulnerabilities, /vulnerability/<cve>)
-routes/api.py              JSON API 라우트 (/api/...)
-scripts/import_to_mongo.py CSV를 MongoDB로 적재하는 스크립트
-templates/                 index.html, vulnerabilities.html, detail.html (+ base.html)
+app.py                       Flask 앱 생성/실행 엔트리포인트
+config.py                    DATA_SOURCE / JSON / Mongo 설정
+analysis/kev_analysis.py     JSON 또는 MongoDB 로딩, 전처리, 집계, 검색 로직
+analysis/visualize.py        (선택) matplotlib으로 차트 PNG를 그리는 함수들
+routes/main.py                페이지 라우트 (/, /vulnerabilities, /vulnerability/<cve>) · static/images/charts/ 스캔
+routes/api.py                JSON API 라우트 (/api/...)
+scripts/import_to_mongo.py   JSON을 MongoDB로 적재하는 스크립트
+scripts/generate_charts.py   (선택) visualize.py의 CHARTS를 PNG로 저장하는 스크립트
+templates/                   index.html, vulnerabilities.html, detail.html (+ base.html)
 static/css/style.css
 static/js/dashboard.js         대시보드 KPI 숫자만 채움 (차트는 빈 틀)
 static/js/vulnerabilities.js   검색 / 필터 / 페이지네이션 테이블
 static/js/detail.js            CVE 상세 렌더링
-data/known_exploited_vulnerabilities.csv  CISA KEV 카탈로그 원본
+static/images/charts/<키>.png  대시보드 차트 카드에 쓸 이미지 (없으면 자리표시자)
+data/known_exploited_vulnerabilities.json  CISA KEV 카탈로그 원본
 ```
 
 ## API
