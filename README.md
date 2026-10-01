@@ -1,2 +1,155 @@
 # kev-analysis
-NVD CVE 데이터와 CISA KEV를 활용한 실제 악용 취약점의 특징 및 최신 동향 분석 프로젝트
+
+NVD CVE 데이터와 CISA KEV를 활용하여 취약점의 공개 현황과 실제 악용이 확인된 취약점의 특징을 분석하는 프로젝트입니다.
+
+현재는 **NVD API 수집과 JSON 구조 탐색 단계**입니다. CISA KEV 결합과 기간별 비교 분석은 구현할 예정입니다.
+
+## 프로젝트 목적
+
+공개되는 취약점의 유형을 파악하고, 그중 실제 악용이 확인된 취약점의 빈도를 파악합니다.
+NVD의 취약점 정보에 CISA KEV 등재 여부를 연결하고, 기간별 비교를 통해 근래의 취약점이 어떻게 변화하고 있는지 동향을 분석합니다.
+
+분석에서 확인하려는 질문은 다음과 같습니다.
+
+- 기간별 취약점 공개 건수와 CWE 유형별 비중은 어떻게 달라지는가?
+- 분석 대상 중 CISA KEV에 등재된 취약점은 어떤 유형에 분포하는가?
+
+
+마지막 질문에는 KEV의 `dateAdded` 수집과 과거에 공개된 CVE 정보가 추가로 필요합니다. 세부 분석 기간과 최종 지표는 데이터 검토 후 확정합니다.
+
+
+## 활용 데이터
+
+| 데이터 | 역할 | 주요 항목 |
+| :--- | :--- | :--- |
+| NVD CVE API | 취약점의 공개 시점과 유형 확인 | `id`, `published`, `lastModified`, `weaknesses` |
+| CISA KEV | 실제 악용이 확인된 취약점 목록과 대조 | `cveID` |
+
+NVD의 `id`와 CISA KEV의 `cveID`를 기준으로 두 데이터를 연결합니다.
+CWE는 취약점의 약점 유형을 분류하는 코드입니다.
+
+- [NVD API 공식 문서](https://nvd.nist.gov/developers/vulnerabilities)
+- [NVD 응답 JSON 스키마](https://csrc.nist.gov/schema/nvd/api/2.0/cve_api_json_2.0.schema)
+- [CISA KEV 공식 데이터 저장소](https://github.com/cisagov/kev-data)
+- [CISA KEV 공식 JSON 스키마](https://github.com/cisagov/kev-data/blob/develop/known_exploited_vulnerabilities_schema.json)
+
+## 현재 구현 상태
+
+샘플입니다
+
+
+| 기능 | 상태 | 내용 |
+| :--- | :--- | :--- |
+| NVD API 기간 조회 | 구현 | 공개일 조건으로 첫 페이지를 한 번 요청 |
+| 원본 JSON 저장 | 구현 | API 응답 구조를 유지하여 저장 |
+| 공개일 추출 및 정렬 | 구현 | `published`만 추출하여 오래된 순서로 저장 |
+| 전체 페이지 수집 | 예정 | 지정한 기간의 모든 결과 수집 |
+| 분석용 필드 정리 및 KEV 결합 | 예정 | CVE ID, 공개일, 수정일, CWE, KEV 등재 정보 정리 |
+| 기간별 비교 및 시각화 | 예정 | 유형별 분포와 기간별 변화 분석 |
+
+현재 결과물은 원본 API 샘플과 공개일 목록입니다.
+분석 통계와 그래프는 아직 작성하지 않았습니다.
+
+## 실행 방법
+샘플입니다
+
+Python이 설치된 환경에서 저장소를 내려받은 뒤, `README.md`가 있는 프로젝트 폴더에서 실행합니다. 아래 명령은 Windows PowerShell 기준입니다.
+
+### 1. 가상환경과 패키지 준비
+
+샘플입니다
+
+가상환경이 없다면 생성합니다.
+
+```powershell
+python -m venv venv
+```
+
+필요한 패키지를 설치합니다.
+
+```powershell
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+현재 수집 및 정렬 코드에서 사용하는 주요 라이브러리는 `requests`, `python-dotenv`이며, `json`, `os`, `pathlib`는 Python 기본 라이브러리입니다.
+
+### 2. 환경 변수 설정
+
+샘플입니다
+
+프로젝트 최상위 폴더에 `.env` 파일을 만들고 다음과 같이 입력합니다.
+
+```dotenv
+NVD_API_KEY=발급받은_API_키
+BASE_URL=https://services.nvd.nist.gov/rest/json/cves/2.0
+```
+
+현재 코드가 읽는 키 이름은 `NVD_API_KEY`입니다. `BASE_URL`을 비우면 코드의 기본 NVD API 주소를 사용합니다. `.env`는 `.gitignore`에 포함되어 있습니다.
+
+### 3. 조회 기간과 샘플 크기 설정
+
+샘플입니다
+
+`analysis/get_nvd_api.py`에서 공개일 범위를 수정합니다. 현재 설정은 2026년 9월이며, `Z`는 UTC 기준을 의미합니다.
+
+```python
+start_date = "2026-09-01T00:00:00.000Z"
+end_date = "2026-09-30T23:59:59.999Z"
+```
+
+한 요청의 날짜 범위는 최대 120일입니다. 현재 `params`의 `resultsPerPage`는 `2000`, `startIndex`는 `0`으로 설정되어 있습니다. 10건만 살펴보려면 `resultsPerPage`를 `10`으로 변경합니다.
+
+**현재 수집 코드는 첫 페이지 한 번만 요청합니다.** 응답의 `totalResults`가 실제로 받은 `vulnerabilities` 목록의 길이보다 크면, 해당 기간의 결과가 더 남아 있는 상태입니다. 전체 동향 분석 전에는 모든 페이지를 수집해야 합니다.
+
+### 4. NVD 샘플 수집
+
+샘플입니다
+
+```powershell
+.\venv\Scripts\python.exe .\analysis\get_nvd_api.py
+```
+
+원본 응답을 `analysis/nvd_api_sample.json`에 저장합니다.
+
+### 5. 공개일 추출 및 정렬
+
+샘플입니다
+
+```powershell
+.\venv\Scripts\python.exe .\analysis\analysis_api_sample.py
+```
+
+샘플의 각 CVE에서 `published`를 추출하여 `analysis/nvd_api_published.json`에 오래된 날짜부터 저장합니다. 같은 공개일이 여러 번 나오면 그대로 유지합니다.
+
+두 스크립트는 재실행 시 각 결과 파일을 덮어씁니다. 저장 위치는 스크립트가 있는 `analysis` 폴더입니다.
+
+## 주요 파일
+
+나중에 자세하게 채웁니다.
+
+```text
+kev-analysis/
+├── analysis/
+│   ├── get_nvd_api.py          # NVD API 샘플 수집
+│   ├── analysis_api_sample.py  # 공개일 추출 및 정렬
+│   ├── nvd_api_sample.json     # 수집 결과: 실행 시 생성
+│   ├── nvd_api_published.json  # 정렬 결과: analysis_api_sample.json실행 시 생성
+│   └── 데이터 분석.md          # JSON 구조 탐색 메모
+├── .env                       # 사용자가 생성하는 환경 변수 파일
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+그 외 `analysis` 폴더의 스크립트는 데이터 구조와 조회 방법을 살펴보기 위한 탐색 코드입니다.
+
+## 분석 시 해석 기준
+
+- 공개 건수는 취약점이 공개된 수를 뜻하며, 실제 공격 횟수를 뜻하지 않습니다.
+- KEV 등재 여부는 실제 악용 확인 목록에 포함되는지를 나타냅니다. KEV에 없는 CVE도 악용되었을 가능성이 있습니다.
+- KEV의 목록에 추가된 시점이 공격 시점은 아닙니다. 최초 공격 시점으로 해석하지 않습니다.
+- CWE는 없거나 여러 개일 수 있습니다. 본 분석 전 미분류 항목과 복수 CWE의 집계 기준을 정합니다.
+- 비교 기간, 수집 시점, 수집 건수, 누락값 처리 기준을 결과와 함께 기록할 계획입니다.
+ 
+## 인사이트 도출
+-

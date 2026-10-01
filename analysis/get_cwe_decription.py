@@ -1,5 +1,6 @@
 import requests
 from pathlib import Path
+import json
 
 cwe_number = 89
 url = f"https://cwe-api.mitre.org/api/v1/cwe/weakness/{cwe_number}"
@@ -10,5 +11,8 @@ data = response.json()
 
 analysis_dir = Path(__file__).resolve().parent
 env_path = analysis_dir.parent / ".env"
-sample_path = analysis_dir / "nvd_api_sample.json"
+data_path = analysis_dir / "cwe_api.json"
 
+with open(data_path, "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=4)
+    

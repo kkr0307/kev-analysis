@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-
 # 이 파이썬 파일과 같은 폴더에서 읽고 저장
 analysis_dir = Path(__file__).resolve().parent
 sample_path = analysis_dir / "nvd_api_sample.json"
