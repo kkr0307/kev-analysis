@@ -25,12 +25,12 @@ python app.py   # http://localhost:5000
 
 | 키 | 카드 |
 |---|---|
-| `i1` | 월별 KEV 등록 추이 |
-| `i2` | 벤더별 KEV |
-| `i3` | 랜섬웨어 연관 여부 |
-| `i4` | 제품별 KEV |
-| `i5` | CWE 분포 |
-| `i6` | 대응기간 분포 |
+| `i1` | `i1` |
+| `i2` | `i2` |
+| `i3` |`i3` |
+| `i4` | `i4` |
+| `i5` | `i5` |
+| `i6` |`i6` |
 
 카드 순서를 바꾸려면 `templates/index.html`에서 `chart_card(...)` /
 `chart_card_wide(...)` 호출 줄의 순서를 바꾸면 됩니다.
