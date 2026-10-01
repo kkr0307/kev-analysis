@@ -1,7 +1,8 @@
 # CISA KEV Dashboard (Flask)
 
-CISA(KEV) 카탈로그를 pandas로 가공해 KPI/집계/검색 JSON API로 제공하고, 대시보드/검색
-목록/CVE 상세 페이지를 렌더링합니다.
+NVD CVE 데이터와 CISA KEV를 활용한 실제 악용 취약점의 특징 및 최신 동향 분석
+프로젝트입니다. CISA(KEV) 카탈로그를 pandas로 가공해 KPI/집계/검색 JSON API로
+제공하고, 대시보드/검색 목록/CVE 상세 페이지를 렌더링합니다.
 
 **대시보드의 차트/시각화 영역은 의도적으로 빈 틀입니다.** `static/images/charts/`에
 정해진 이름의 PNG 파일을 넣기만 하면 해당 카드에 바로 표시됩니다 (아래 "새 차트나
