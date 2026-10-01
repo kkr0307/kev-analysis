@@ -225,3 +225,85 @@ plt.savefig(
 plt.close()
 
 print("TOP 5 CWE 연도별 추이 그래프 저장 완료!")
+
+kev_counts = df["is_kev"].value_counts().reindex(
+    [False, True],
+    fill_value=0
+)
+
+kev_counts.index = ["Non-KEV", "KEV"]
+
+plt.figure(figsize=(8, 5))
+
+bars = plt.bar(
+    kev_counts.index,
+    kev_counts.values
+)
+
+plt.title("KEV vs Non-KEV CVE Count")
+plt.xlabel("Category")
+plt.ylabel("Number of CVEs")
+
+for bar, value in zip(bars, kev_counts.values):
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        bar.get_height(),
+        f"{value:,}",
+        ha="center",
+        va="bottom"
+    )
+
+plt.tight_layout()
+
+plt.savefig(
+    OUTPUT_DIR / "kev_vs_nonkev.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+print("KEV / Non-KEV 비교 그래프 저장 완료!")
+
+kev_data = df[df["is_kev"] == True]
+
+kev_yearly = (
+    kev_data.groupby("year")
+    .size()
+    .reindex([2023, 2024, 2025, 2026], fill_value=0)
+)
+
+plt.figure(figsize=(8, 5))
+
+plt.plot(
+    kev_yearly.index,
+    kev_yearly.values,
+    marker="o"
+)
+
+plt.title("Yearly KEV Vulnerability Trend")
+plt.xlabel("Year")
+plt.ylabel("Number of KEV CVEs")
+plt.xticks([2023, 2024, 2025, 2026])
+plt.grid(alpha=0.3)
+
+for year, value in kev_yearly.items():
+    plt.text(
+        year,
+        value,
+        str(value),
+        ha="center",
+        va="bottom"
+    )
+
+plt.tight_layout()
+
+plt.savefig(
+    OUTPUT_DIR / "yearly_kev_trend.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+print("연도별 KEV 추이 그래프 저장 완료!")
