@@ -1,10 +1,10 @@
 """(선택) matplotlib으로 대시보드용 PNG를 만들 때 쓰는 함수들입니다.
 
-대시보드는 static/images/charts/i1.png ~ i6.png 파일만 봅니다. 자세한 사용법은
-README.md의 "나만의 시각화 추가하기"를 참고하세요.
+대시보드는 static/images/charts/<키>.png 파일을 봅니다. 자세한 사용법은
+README.md의 "차트 이미지 교체/추가하기"를 참고하세요.
 
 파이썬으로 그리고 싶다면: 함수를 추가해 matplotlib figure를 반환하게 하고,
-아래 CHARTS 딕셔너리에 `"i2": 함수`처럼 등록한 뒤
+아래 CHARTS 딕셔너리에 `"키": 함수`처럼 등록한 뒤
 `python scripts/generate_charts.py`를 실행하세요.
 """
 import matplotlib
@@ -90,10 +90,11 @@ def example_monthly_trend():
 #
 #     return fig
 #
-# CHARTS["i2"] = example_top_vendors
+# CHARTS["top_vendors"] = example_top_vendors
 
 
-# scripts/generate_charts.py가 읽는 목록입니다. 키는 i1 ~ i6 중에서 씁니다.
+# scripts/generate_charts.py가 읽는 목록입니다. 키가 곧 PNG 파일 이름이고,
+# 대시보드에 보이려면 templates/index.html에 같은 키로 카드를 추가하세요.
 CHARTS = {
-    "i1": example_monthly_trend,
+    "monthly_kev_trend": example_monthly_trend,
 }

@@ -3,10 +3,8 @@
 CISA(KEV) 카탈로그를 pandas로 가공해 KPI/집계/검색 JSON API로 제공하고, 대시보드/검색
 목록/CVE 상세 페이지를 렌더링합니다.
 
-**대시보드의 차트/시각화 영역은 의도적으로 빈 틀입니다.** `static/images/charts/`에
-정해진 이름의 PNG 파일을 넣기만 하면 해당 카드에 바로 표시됩니다 (아래 "새 차트나
-이미지 추가하기" 참고). 아직 파일이 없는 카드는 참고용으로 `/api/...` 엔드포인트
-안내를 보여줍니다 (아래 API 표 참고).
+대시보드는 CVE 분석 결과(NVD, 2023–2026) 차트 이미지를 보여줍니다. 이미지는
+`static/images/charts/`에 있고, 차트를 클릭하면 크게 볼 수 있습니다.
 
 ## 실행 방법 (데스크탑)
 
@@ -18,37 +16,29 @@ cp .env.example .env
 python app.py   # http://localhost:5000
 ```
 
-## 새 차트나 이미지 추가하기
+## 차트 이미지 교체/추가하기
 
-`static/images/charts/` 폴더에 `i1.png` ~ `i6.png` 중 원하는 파일을 넣으면
-해당 카드에 그대로 표시됩니다. 파일이 없는 키는 자리표시자가 보입니다.
+대시보드 카드는 `static/images/charts/<키>.png` 파일을 보여줍니다. 같은 이름으로
+파일을 덮어쓰면 바로 바뀌고, 파일이 없으면 자리표시자가 보입니다.
 
-| 키 | 카드 |
+| 섹션 | 키 (파일 이름) |
 |---|---|
-| `i1` | `i1` |
-| `i2` | `i2` |
-| `i3` |`i3` |
-| `i4` | `i4` |
-| `i5` | `i5` |
-| `i6` |`i6` |
+| 증가 추이 | `monthly_cve_trend`, `yearly_cve_count`, `yearly_kev_trend` |
+| 위험도 | `severity_distribution`, `attack_vector_distribution`, `cvss_score_distribution` |
+| 취약점 유형 | `cwe_top10`, `top5_cwe_yearly_trend` |
 
-카드 순서를 바꾸려면 `templates/index.html`에서 `chart_card(...)` /
-`chart_card_wide(...)` 호출 줄의 순서를 바꾸면 됩니다.
+카드 제목·설명·순서, 상단 KPI 숫자는 `templates/index.html`에서 고칩니다.
+새 카드는 `chart_card("키", "제목", "설명")` 한 줄을 추가하면 되고, 가로로 긴
+차트는 `wide=True`를 넣어 한 줄 전체를 쓰게 합니다.
 
 ### (선택) matplotlib으로 PNG 만들기
 
 `analysis/visualize.py`에 matplotlib figure를 반환하는 함수를 추가하고
-`CHARTS` 딕셔너리에 `"i2": 함수`처럼 등록한 뒤 실행하면 PNG로 저장됩니다.
+`CHARTS` 딕셔너리에 `"키": 함수`처럼 등록한 뒤 실행하면 PNG로 저장됩니다.
 
 ```bash
 python scripts/generate_charts.py
 ```
-
-### 자바스크립트로 직접 그리기
-
-`index.html`의 `.chart-placeholder`를 `<canvas>`로 바꾸고,
-`dashboard.js`에서 `/api/...` 데이터를 받아 차트 라이브러리로 그리면 됩니다.
-
 
 ## 데이터 소스: JSON 기본 + MongoDB 폴백
 
@@ -82,7 +72,7 @@ scripts/import_to_mongo.py   JSON을 MongoDB로 적재하는 스크립트
 scripts/generate_charts.py   (선택) visualize.py의 CHARTS를 PNG로 저장하는 스크립트
 templates/                   index.html, vulnerabilities.html, detail.html (+ base.html)
 static/css/style.css
-static/js/dashboard.js         대시보드 KPI 숫자만 채움 (차트는 빈 틀)
+static/js/dashboard.js         차트 클릭 시 확대 보기
 static/js/vulnerabilities.js   검색 / 필터 / 페이지네이션 테이블
 static/js/detail.js            CVE 상세 렌더링
 static/images/charts/<키>.png  대시보드 차트 카드에 쓸 이미지 (없으면 자리표시자)

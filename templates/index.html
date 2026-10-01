@@ -1,73 +1,70 @@
 {% extends "base.html" %}
-{% block title %}대시보드 · CISA KEV{% endblock %}
+{% block title %}대시보드 · CVE 분석{% endblock %}
 
-{% macro chart_body(key, api) %}
+{% macro chart_body(key, title) %}
   {% if key in charts %}
-    <img class="chart-image" src="{{ url_for('static', filename='images/charts/' ~ key ~ '.png') }}" alt="{{ key }} 그래프">
+    {% set src = url_for('static', filename='images/charts/' ~ key ~ '.png') %}
+    <a class="chart-link" href="{{ src }}" data-title="{{ title }}">
+      <img class="chart-image" src="{{ src }}" alt="{{ title }}">
+    </a>
   {% else %}
-    <div class="chart-placeholder" data-api="{{ api }}">
-      <span>시각화 영역 (연동 예정)</span>
-      <code>GET {{ api }}</code>
+    <div class="chart-placeholder">
+      <span>이미지 없음</span>
+      <code>static/images/charts/{{ key }}.png</code>
     </div>
   {% endif %}
 {% endmacro %}
 
-{% macro chart_card(key, title, api) %}
-  <div class="chart-card">
+{% macro chart_card(key, title, note=None, wide=False) %}
+  <div class="chart-card{% if wide %} chart-card--wide{% endif %}">
     <h2>{{ title }}</h2>
-    {{ chart_body(key, api) }}
+    {{ chart_body(key, title) }}
+    {% if note %}<p class="chart-note">{{ note }}</p>{% endif %}
   </div>
 {% endmacro %}
 
-{% macro chart_card_wide(key, title, api) %}
-  <section class="chart-card chart-card--wide">
-    <h2>{{ title }}</h2>
-    {{ chart_body(key, api) }}
-  </section>
-{% endmacro %}
-
 {% block content %}
-<h1 class="page-title">CISA 알려진 악용 취약점(KEV) 대시보드</h1>
+<h1 class="page-title">CVE 취약점 분석</h1>
+<p class="page-scope">CVE 전체 (NVD, 2023–2026) · 2026년은 집계 중</p>
 
 <section class="kpi-grid">
   <div class="kpi-card">
     <div class="kpi-label">전체 CVE</div>
-    <div class="kpi-value" id="kpi-total">-</div>
+    <div class="kpi-value">196,530</div>
   </div>
   <div class="kpi-card">
-    <div class="kpi-label">벤더 수</div>
-    <div class="kpi-value" id="kpi-vendors">-</div>
+    <div class="kpi-label">KEV 등재</div>
+    <div class="kpi-value">696</div>
   </div>
   <div class="kpi-card">
-    <div class="kpi-label">제품 수</div>
-    <div class="kpi-value" id="kpi-products">-</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">랜섬웨어 연관 취약점</div>
-    <div class="kpi-value" id="kpi-ransomware">-</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">평균 대응기간 (일)</div>
-    <div class="kpi-value" id="kpi-response">-</div>
+    <div class="kpi-label">KEV 비율</div>
+    <div class="kpi-value kpi-value--danger">0.35%</div>
   </div>
 </section>
 
-<p class="dashboard-note">
-  아래 차트는 <code>static/images/charts/&lt;키&gt;.png</code> 파일이 있으면 그대로
-  보여주고, 없으면 연결 예정 API 안내로 대신 표시됩니다. 자세한 방법은 README의
-  "나만의 시각화 추가하기"를 참고하세요.
-</p>
+<h2 class="section-title">증가 추이</h2>
+{{ chart_card("monthly_cve_trend", "2026년 들어 월별 CVE 발행량 급증", "2026년 10월은 집계 중", wide=True) }}
+<div class="chart-grid">
+  {{ chart_card("yearly_cve_count", "연간 CVE 3년 새 약 2.4배 증가", "2026년은 집계 중 (9월까지)") }}
+  {{ chart_card("yearly_kev_trend", "KEV 등재는 연 160~200건 수준", "2026년은 집계 중") }}
+</div>
 
-{{ chart_card_wide("i1", "월별 KEV 등록 추이", "/api/trends") }}
+<h2 class="section-title">위험도</h2>
+<div class="chart-grid">
+  {{ chart_card("severity_distribution", "MEDIUM·HIGH 등급이 대부분") }}
+  {{ chart_card("attack_vector_distribution", "원격(NETWORK) 공격 가능이 대다수") }}
+</div>
+{{ chart_card("cvss_score_distribution", "CVSS 7~8점대에 가장 많이 분포", wide=True) }}
 
-<section class="chart-grid">
-  {{ chart_card("i2", "벤더별 KEV", "/api/vendors") }}
-  {{ chart_card("i3", "랜섬웨어 연관 여부", "/api/ransomware") }}
-  {{ chart_card("i4", "제품별 KEV", "/api/products") }}
-  {{ chart_card("i5", "CWE 분포", "/api/cwes") }}
-</section>
+<h2 class="section-title">취약점 유형 (CWE)</h2>
+<div class="chart-grid">
+  {{ chart_card("cwe_top10", "CWE-79(XSS)가 2위의 3배 이상") }}
+  {{ chart_card("top5_cwe_yearly_trend", "CWE-862·284(접근 통제) 증가세") }}
+</div>
 
-{{ chart_card_wide("i6", "대응기간 분포", "/api/response-time") }}
+<dialog class="lightbox" id="lightbox">
+  <img alt="">
+</dialog>
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
