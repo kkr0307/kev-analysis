@@ -137,28 +137,29 @@ kev-analysis/
 
 ### 1. 기간별 취약점 공개 건수
 
-![기간별 취약점 공개 건수](이미지 경로)
+<img width="1042" height="641" alt="CVE Count by Year" src="https://github.com/user-attachments/assets/07bae158-9f5c-4c9c-b861-0099e3737344" />
 
 기간별 NVD CVE 공개 건수를 비교하여 취약점 공개 추이를 확인합니다.
 
 ### 2. CWE 유형별 취약점 분포
 
-![CWE 유형별 취약점 분포](이미지 경로)
+<img width="975" height="642" alt="cwe_top10" src="https://github.com/user-attachments/assets/95cea907-f769-4585-abb7-4be0fe5ae5e4" />
 
-CWE 유형별 취약점 분포를 비교하여 어떤 유형의 취약점이 많이 나타나는지 확인합니다.
+CISA KEV에 등재된 CVE를 대상으로 CWE 유형별 분포를 비교한 결과 CVE-79가 가장 많은 공격에 사용되었다는 결과를 도출할 수 있었습니다. 
 
-### 3. KEV 등재 취약점의 CWE 분포
+### 3. CVE 위험도 점수 분포
 
-![KEV 등재 취약점의 CWE 분포](이미지 경로)
+<img width="1041" height="647" alt="CVE Severity Distribution" src="https://github.com/user-attachments/assets/4af26173-40b8-44b2-994e-fd84d2d6e74e" />
 
-CISA KEV에 등재된 CVE를 대상으로 CWE 유형별 분포를 비교합니다.
+대부분의 공격이 MEDIUM-HIGH 점수에 분포하고 있는 것을 확인했습니다.
 
 ## Flask 대시보드
 
 분석 결과를 Flask 기반 웹 화면에서 확인할 수 있도록 구성하였습니다.
 
 <img width="945" height="907" alt="image" src="https://github.com/user-attachments/assets/5b9f61fa-8899-4248-a2b2-7182254cf899" />
-
+<img width="1061" height="907" alt="2" src="https://github.com/user-attachments/assets/ead6f870-1817-4eec-a2d4-eee18ccf06ae" />
+<img width="945" height="907" alt="3" src="https://github.com/user-attachments/assets/ebb30849-7c86-4e4a-be9f-2980da0f04da" />
 
 주요 분석 결과와 시각화 자료를 웹 화면에서 확인할 수 있습니다.
 
