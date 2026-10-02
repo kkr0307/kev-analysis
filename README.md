@@ -38,7 +38,6 @@ CWE는 취약점의 약점 유형을 분류하는 코드입니다.
 | NVD API 기간 조회 | 구현 | 공개일 조건으로 첫 페이지를 한 번 요청 |
 | 원본 JSON 저장 | 구현 | API 응답 구조를 유지하여 저장 |
 | 공개일 추출 및 정렬 | 구현 | `published`만 추출하여 오래된 순서로 저장 |
-| 전체 페이지 수집 | 예정 | 지정한 기간의 모든 결과 수집 |
 | 분석용 필드 정리 및 KEV 결합 | 구현 | CVE ID, 공개일, 수정일, CWE, KEV 등재 정보 정리 |
 | 기간별 비교 및 시각화 | 구현 | 유형별 분포와 기간별 변화 분석 |
 
@@ -47,8 +46,6 @@ CWE는 취약점의 약점 유형을 분류하는 코드입니다.
 Python이 설치된 환경에서 저장소를 내려받은 뒤, `README.md`가 있는 프로젝트 폴더에서 실행합니다. 아래 명령은 Windows PowerShell 기준입니다.
 
 ### 1. 가상환경과 패키지 준비
-
-샘플입니다
 
 가상환경이 없다면 생성합니다.
 
@@ -91,8 +88,6 @@ end_date = "2026-09-30T23:59:59.999Z"
 
 ### 4. NVD 샘플 수집
 
-샘플입니다
-
 ```powershell
 .\venv\Scripts\python.exe .\analysis\get_nvd_api.py
 ```
@@ -100,8 +95,6 @@ end_date = "2026-09-30T23:59:59.999Z"
 원본 응답을 `analysis/nvd_api_sample.json`에 저장합니다.
 
 ### 5. 공개일 추출 및 정렬
-
-샘플입니다
 
 ```powershell
 .\venv\Scripts\python.exe .\analysis\analysis_api_sample.py
@@ -111,25 +104,34 @@ end_date = "2026-09-30T23:59:59.999Z"
 
 두 스크립트는 재실행 시 각 결과 파일을 덮어씁니다. 저장 위치는 스크립트가 있는 `analysis` 폴더입니다.
 
-## 주요 파일
-
-나중에 자세하게 채웁니다.
+## 프로젝트 구조
 
 ```text
 kev-analysis/
-├── analysis/
-│   ├── get_nvd_api.py          # NVD API 샘플 수집
-│   ├── analysis_api_sample.py  # 공개일 추출 및 정렬
-│   ├── nvd_api_sample.json     # 수집 결과: 실행 시 생성
-│   ├── nvd_api_published.json  # 정렬 결과: analysis_api_sample.json실행 시 생성
-│   └── 데이터 분석.md          # JSON 구조 탐색 메모
-├── .env                       # 사용자가 생성하는 환경 변수 파일
-├── .gitignore
-├── requirements.txt
+├── data_collection/    # NVD / CISA KEV 데이터 수집
+├── preprocessing/      # 데이터 전처리
+├── data_analysis/      # 통계 및 분석
+├── visualization/      # 분석 결과 시각화
+├── flask_site/         # Flask 기반 웹 대시보드
+├── dev/                # 개발 및 테스트 코드
 └── README.md
 ```
 
-그 외 `analysis` 폴더의 스크립트는 데이터 구조와 조회 방법을 살펴보기 위한 탐색 코드입니다.
+## 전체 데이터 처리 흐름
+
+**분석 기간 및 수집 범위 확정**  
+↓  
+**NVD / KEV 원본 데이터 수집**  
+↓  
+**필드 추출 및 결측값 확인**  
+↓  
+**CVE ID 기준 데이터 연결**  
+↓  
+**기간별 / 유형별 집계**  
+↓  
+**그래프 작성 및 결과 해석**  
+↓  
+**Flask 시각화**
 
 ## 분석 시 해석 기준
 
