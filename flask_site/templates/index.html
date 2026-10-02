@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}NVD CVE / CISA KEV 대시보드{% endblock %}
+
+{% macro chart_body(key, title) %}
+  {% if key in charts %}
+    {% set src = url_for('static', filename='images/charts/' ~ key ~ '.png') %}
+    <a class="chart-link" href="{{ src }}" target="_blank" title="{{ title }} - 원본 크기로 열기">
+      <img class="chart-image" src="{{ src }}" alt="{{ title }}">
+    </a>
+  {% else %}
+    <div class="chart-placeholder">
+      <span>이미지 없음</span>
+      <code>static/images/charts/{{ key }}.png</code>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro chart_card(key, title, note=None, wide=False) %}
+  <div class="chart-card{% if wide %} chart-card--wide{% endif %}">
+    <h2>{{ title }}</h2>
+    {{ chart_body(key, title) }}
+    {% if note %}<p class="chart-note">{{ note }}</p>{% endif %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+<h1 class="page-title">NVD CVE / CISA KEV 대시보드</h1>
+<p class="page-scope">CVE 전체 (NVD, 2023–2026) · 2026년은 집계 중</p>
+
+<section class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">전체 CVE</div>
+    <div class="kpi-value">196,530</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">KEV 등재</div>
+    <div class="kpi-value">696</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">KEV 비율</div>
+    <div class="kpi-value kpi-value--danger">0.35%</div>
+  </div>
+</section>
+
+<h2 class="section-title">증가 추이</h2>
+{{ chart_card("monthly_cve_trend", "2026년 들어 월별 CVE 발행량 급증", "2026년 10월은 집계 중", wide=True) }}
+<div class="chart-grid">
+  {{ chart_card("yearly_cve_count", "연간 CVE 3년 새 약 2.4배 증가", "2026년은 집계 중 (9월까지)") }}
+  {{ chart_card("yearly_kev_trend", "KEV 등재는 연 160~200건 수준", "2026년은 집계 중") }}
+</div>
+
+<h2 class="section-title">위험도</h2>
+<div class="chart-grid">
+  {{ chart_card("severity_distribution", "MEDIUM·HIGH 등급이 대부분") }}
+  {{ chart_card("attack_vector_distribution", "원격(NETWORK) 공격 가능이 대다수") }}
+</div>
+{{ chart_card("cvss_score_distribution", "CVSS 7~8점대에 가장 많이 분포", wide=True) }}
+
+<h2 class="section-title">취약점 유형 (CWE)</h2>
+<div class="chart-grid">
+  {{ chart_card("cwe_top10", "CWE-79(XSS)가 2위의 3배 이상") }}
+  {{ chart_card("top5_cwe_yearly_trend", "CWE-862·284(접근 통제) 증가세") }}
+</div>
+{% endblock %}

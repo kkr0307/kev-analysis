@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}취약점 검색 · NVD CVE / CISA KEV{% endblock %}
+
+{% block content %}
+<h1 class="page-title">취약점 검색</h1>
+
+<section class="search-panel">
+  <form class="search-form" method="get" action="{{ url_for('vulnerabilities') }}">
+    <input type="text" name="keyword" value="{{ form.keyword }}"
+           placeholder="CVE ID / 제품 / 취약점명 / 설명 검색 (예: Log4j)">
+
+    <select name="vendor">
+      <option value="">벤더 전체</option>
+      {% for v in vendors %}
+      <option value="{{ v }}" {% if v == form.vendor %}selected{% endif %}>{{ v }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="ransomware">
+      <option value="">랜섬웨어 전체</option>
+      <option value="Known" {% if form.ransomware == 'Known' %}selected{% endif %}>Known</option>
+      <option value="Unknown" {% if form.ransomware == 'Unknown' %}selected{% endif %}>Unknown</option>
+    </select>
+
+    <select name="year">
+      <option value="">등록연도 전체</option>
+      {% for y in years %}
+      <option value="{{ y }}" {% if y == form.year %}selected{% endif %}>{{ y }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">검색</button>
+  </form>
+  <p class="result-count">총 {{ "{:,}".format(count) }}건</p>
+</section>
+
+<section class="table-wrap">
+  <table class="kev-table">
+    <thead>
+      <tr>
+        <th>CVE ID</th>
+        <th>벤더</th>
+        <th>제품</th>
+        <th>취약점명</th>
+        <th>등록일</th>
+        <th>랜섬웨어</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td><a href="{{ url_for('vulnerability_detail', cve_id=row.cveID) }}">{{ row.cveID }}</a></td>
+        <td>{{ row.vendorProject or '-' }}</td>
+        <td>{{ row.product or '-' }}</td>
+        <td>{{ row.vulnerabilityName or '-' }}</td>
+        <td>{{ row.dateAdded or '-' }}</td>
+        <td>
+          {% set known = row.knownRansomwareCampaignUse == 'Known' %}
+          <span class="badge {{ 'badge-known' if known else 'badge-unknown' }}">
+            {{ row.knownRansomwareCampaignUse or 'Unknown' }}
+          </span>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="table-status">검색 결과가 없습니다.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% if pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+  <a href="{{ url_for('vulnerabilities', page=page - 1, **query) }}">이전</a>
+  {% endif %}
+  <span>{{ page }} / {{ pages }}</span>
+  {% if page < pages %}
+  <a href="{{ url_for('vulnerabilities', page=page + 1, **query) }}">다음</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
