@@ -9,19 +9,32 @@ NVD의 취약점 정보에 CISA KEV 등재 여부를 연결하고, 기간별 비
 
 분석에서 확인하려는 질문은 다음과 같습니다.
 
-- 기간별 취약점 공개 건수와 CWE 유형별 비중은 어떻게 달라지는가?
+- 기간별 취약점 공개 건수와 KEV 등재수는 어떻게 변화하는가?
+
 - 분석 대상 중 CISA KEV에 등재된 취약점은 어떤 유형에 분포하는가?
 
+- 근 4년간 공개된 취약점의 위험도는 어느정도인가?
 
-마지막 질문에는 KEV의 `dateAdded` 수집과 과거에 공개된 CVE 정보가 추가로 필요합니다. 세부 분석 기간과 최종 지표는 데이터 검토 후 확정합니다.
-
+- 자주 이용되는 공격 경로는 어떻게 되는가?
 
 ## 활용 데이터
 
-| 데이터 | 역할 | 주요 항목 |
-| :--- | :--- | :--- |
-| NVD CVE API | 취약점의 공개 시점과 유형 확인 | `id`, `published`, `lastModified`, `weaknesses` |
-| CISA KEV | 실제 악용이 확인된 취약점 목록과 대조 | `cveID` |
+## NVD CVE
+
+| 컬럼명 | NVD JSON 접근 경로 | 데이터 타입 | 설명 및 비고 |
+| :--- | :--- | :--- | :--- |
+| `cve_id` | `item["cve"]["id"]` | String | CVE 식별자 |
+| `published` | `item["cve"]["published"]` | String | 취약점 최초 공개 일시. 전처리 과정에서 `YYYY-MM-DD` 형식으로 변환 |
+| `cwe` | `item["cve"]["weaknesses"][0]["description"][0]["value"]` | String | CWE 유형 코드. 예: `CWE-89` |
+| `cvss_score` | CVSS v3.1: `item["cve"]["metrics"]["cvssMetricV31"][0]["cvssData"]["baseScore"]`<br>CVSS v3.0: `item["cve"]["metrics"]["cvssMetricV30"][0]["cvssData"]["baseScore"]`<br>CVSS v2: `item["cve"]["metrics"]["cvssMetricV2"][0]["cvssData"]["baseScore"]` | Float | 취약점 자체의 기술적 심각도를 0.0~10.0 범위의 점수로 표현 |
+| `severity` | CVSS v3.1: `item["cve"]["metrics"]["cvssMetricV31"][0]["baseSeverity"]`<br>CVSS v3.0: `item["cve"]["metrics"]["cvssMetricV30"][0]["baseSeverity"]`<br>CVSS v2: `item["cve"]["metrics"]["cvssMetricV2"][0]["baseSeverity"]` | String | CVSS 심각도 등급. `LOW`, `MEDIUM`, `HIGH`, `CRITICAL` 등의 값 |
+| `attack_vector` | CVSS v3.1: `item["cve"]["metrics"]["cvssMetricV31"][0]["cvssData"]["attackVector"]`<br>CVSS v3.0: `item["cve"]["metrics"]["cvssMetricV30"][0]["cvssData"]["attackVector"]`<br>CVSS v2: `item["cve"]["metrics"]["cvssMetricV2"][0]["cvssData"]["accessVector"]` | String | 취약점 악용에 필요한 공격 접근 경로 |
+
+## CISA KEV
+
+| 컬럼명 | CISA KEV JSON 접근 경로 | 데이터 타입 | 설명 및 비고 |
+| :--- | :--- | :--- | :--- |
+| `cve_id` | `item["vulnerabilities"][...]["cveID"]` | String | 실제 악용이 확인되어 KEV에 등재된 취약점의 CVE 식별자 |
 
 NVD의 `id`와 CISA KEV의 `cveID`를 기준으로 두 데이터를 연결합니다.
 CWE는 취약점의 약점 유형을 분류하는 코드입니다.
@@ -30,34 +43,6 @@ CWE는 취약점의 약점 유형을 분류하는 코드입니다.
 - [NVD 응답 JSON 스키마](https://csrc.nist.gov/schema/nvd/api/2.0/cve_api_json_2.0.schema)
 - [CISA KEV 공식 데이터 저장소](https://github.com/cisagov/kev-data)
 - [CISA KEV 공식 JSON 스키마](https://github.com/cisagov/kev-data/blob/develop/known_exploited_vulnerabilities_schema.json)
-
-## 현재 구현 상태
-
-| 기능 | 상태 | 내용 |
-| :--- | :--- | :--- |
-| NVD API 기간 조회 | 구현 | 공개일 조건으로 첫 페이지를 한 번 요청 |
-| 원본 JSON 저장 | 구현 | API 응답 구조를 유지하여 저장 |
-| 공개일 추출 및 정렬 | 구현 | `published`만 추출하여 오래된 순서로 저장 |
-| 분석용 필드 정리 및 KEV 결합 | 구현 | CVE ID, 공개일, 수정일, CWE, KEV 등재 정보 정리 |
-| 기간별 비교 및 시각화 | 구현 | 유형별 분포와 기간별 변화 분석 |
-
-## 실행 방법
-
-Python이 설치된 환경에서 저장소를 내려받은 뒤, `README.md`가 있는 프로젝트 폴더에서 실행합니다. 아래 명령은 Windows PowerShell 기준입니다.
-
-### 1. 가상환경과 패키지 준비
-
-가상환경이 없다면 생성합니다.
-
-```powershell
-python -m venv venv
-```
-
-필요한 패키지를 설치합니다.
-
-```powershell
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
-```
 
 현재 수집 및 정렬 코드에서 사용하는 주요 라이브러리는 `requests`, `python-dotenv`이며, `json`, `os`, `pathlib`는 Python 기본 라이브러리입니다.
 
@@ -71,38 +56,6 @@ BASE_URL=https://services.nvd.nist.gov/rest/json/cves/2.0
 ```
 
 현재 코드가 읽는 키 이름은 `NVD_API_KEY`입니다. `BASE_URL`을 비우면 코드의 기본 NVD API 주소를 사용합니다. `.env`는 `.gitignore`에 포함되어 있습니다.
-
-### 3. 조회 기간과 샘플 크기 설정
-
-
-`analysis/get_nvd_api.py`에서 공개일 범위를 수정합니다. 현재 설정은 2026년 9월이며, `Z`는 UTC 기준을 의미합니다.
-
-```python
-start_date = "2026-09-01T00:00:00.000Z"
-end_date = "2026-09-30T23:59:59.999Z"
-```
-
-한 요청의 날짜 범위는 최대 120일입니다. 현재 `params`의 `resultsPerPage`는 `2000`, `startIndex`는 `0`으로 설정되어 있습니다. 10건만 살펴보려면 `resultsPerPage`를 `10`으로 변경합니다.
-
-**현재 수집 코드는 첫 페이지 한 번만 요청합니다.** 응답의 `totalResults`가 실제로 받은 `vulnerabilities` 목록의 길이보다 크면, 해당 기간의 결과가 더 남아 있는 상태입니다. 전체 동향 분석 전에는 모든 페이지를 수집해야 합니다.
-
-### 4. NVD 샘플 수집
-
-```powershell
-.\venv\Scripts\python.exe .\analysis\get_nvd_api.py
-```
-
-원본 응답을 `analysis/nvd_api_sample.json`에 저장합니다.
-
-### 5. 공개일 추출 및 정렬
-
-```powershell
-.\venv\Scripts\python.exe .\analysis\analysis_api_sample.py
-```
-
-샘플의 각 CVE에서 `published`를 추출하여 `analysis/nvd_api_published.json`에 오래된 날짜부터 저장합니다. 같은 공개일이 여러 번 나오면 그대로 유지합니다.
-
-두 스크립트는 재실행 시 각 결과 파일을 덮어씁니다. 저장 위치는 스크립트가 있는 `analysis` 폴더입니다.
 
 ## 프로젝트 구조
 
