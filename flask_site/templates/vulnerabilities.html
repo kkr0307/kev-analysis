@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}취약점 검색 · CISA KEV{% endblock %}
+{% block content %}
+<h1 class="page-title">취약점 검색</h1>
+
+<section class="search-panel">
+  <form id="search-form" class="search-form">
+    <input type="text" id="filter-keyword" name="keyword"
+           placeholder="CVE ID / 제품 / 취약점명 / 설명 검색 (예: Log4j)">
+
+    <select id="filter-vendor" name="vendor">
+      <option value="all">벤더 전체</option>
+    </select>
+
+    <select id="filter-ransomware" name="ransomware">
+      <option value="all">랜섬웨어 전체</option>
+      <option value="Known">Known</option>
+      <option value="Unknown">Unknown</option>
+    </select>
+
+    <select id="filter-year" name="year">
+      <option value="all">등록연도 전체</option>
+    </select>
+
+    <button type="submit">검색</button>
+  </form>
+  <p class="result-count" id="result-count"></p>
+</section>
+
+<section class="table-wrap">
+  <table class="kev-table">
+    <thead>
+      <tr>
+        <th>CVE ID</th>
+        <th>벤더</th>
+        <th>제품</th>
+        <th>취약점명</th>
+        <th>등록일</th>
+        <th>랜섬웨어</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      <tr><td colspan="6" class="table-status">불러오는 중...</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="pagination" id="pagination"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/vulnerabilities.js') }}"></script>
+{% endblock %}

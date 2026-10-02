@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ cve_id }} · CISA KEV{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('main.vulnerabilities') }}">← 목록으로</a>
+<div id="detail-root" data-cve-id="{{ cve_id }}">
+  <div class="table-status">불러오는 중...</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/detail.js') }}"></script>
+{% endblock %}
