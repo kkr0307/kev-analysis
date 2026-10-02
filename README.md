@@ -139,7 +139,7 @@ kev-analysis/
 
 <img width="1042" height="641" alt="CVE Count by Year" src="https://github.com/user-attachments/assets/07bae158-9f5c-4c9c-b861-0099e3737344" />
 
-기간별 NVD CVE 공개 건수를 비교하여 취약점 공개 추이를 확인합니다.
+기간별 NVD CVE 공개 건수를 비교하여 취약점 공개 추이를 확인하여 매년 증가하고 있는 추세를 확인하였습니다. 
 
 ### 2. CWE 유형별 취약점 분포
 
