@@ -1,11 +1,54 @@
 {% extends "base.html" %}
-{% block title %}{{ cve_id }} · CISA KEV{% endblock %}
+{% block title %}{{ v.cveID }} · NVD CVE / CISA KEV{% endblock %}
+
 {% block content %}
-<a class="back-link" href="{{ url_for('main.vulnerabilities') }}">← 목록으로</a>
-<div id="detail-root" data-cve-id="{{ cve_id }}">
-  <div class="table-status">불러오는 중...</div>
+<a class="back-link" href="{{ url_for('vulnerabilities') }}">← 목록으로</a>
+
+<div class="detail-header">
+  <h1>{{ v.cveID }}</h1>
+  <p>{{ v.vulnerabilityName }}</p>
 </div>
-{% endblock %}
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/detail.js') }}"></script>
+
+<div class="detail-grid">
+  <div class="info-card">
+    <h2>기본 정보</h2>
+    <div class="info-row"><span class="label">벤더</span><span class="value">{{ v.vendorProject or '-' }}</span></div>
+    <div class="info-row"><span class="label">제품</span><span class="value">{{ v.product or '-' }}</span></div>
+    <div class="info-row"><span class="label">KEV 등록일</span><span class="value">{{ v.dateAdded or '-' }}</span></div>
+    <div class="info-row"><span class="label">대응 기한</span><span class="value">{{ v.dueDate or '-' }}</span></div>
+    <div class="info-row">
+      <span class="label">랜섬웨어 연관 여부</span>
+      {% set known = v.knownRansomwareCampaignUse == 'Known' %}
+      <span class="badge {{ 'badge-known' if known else 'badge-unknown' }}">
+        {{ v.knownRansomwareCampaignUse or 'Unknown' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <h2>CWE</h2>
+    <div class="cwe-tags">
+      {% for cwe in v.cwes %}
+      <span class="cwe-tag">{{ cwe }}</span>
+      {% else %}
+      <span class="cwe-tag">정보 없음</span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="text-card">
+  <h2>취약점 설명</h2>
+  <p>{{ v.shortDescription or '설명이 없습니다.' }}</p>
+</div>
+
+<div class="text-card">
+  <h2>권고 조치</h2>
+  <p>{{ v.requiredAction or '권고 조치 정보가 없습니다.' }}</p>
+</div>
+
+<div class="text-card">
+  <h2>참고자료</h2>
+  <p>{{ v.notes or '참고자료가 없습니다.' }}</p>
+</div>
 {% endblock %}

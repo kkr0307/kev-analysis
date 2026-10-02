@@ -149,8 +149,6 @@ a:hover { text-decoration: underline; }
   font-size: 0.8rem;
 }
 
-.chart-placeholder--tall { height: 320px; }
-
 .chart-link {
   display: block;
   cursor: zoom-in;
@@ -177,25 +175,6 @@ a:hover { text-decoration: underline; }
   margin: 8px 0 0;
   font-size: 0.8rem;
   color: var(--text-muted);
-}
-
-.lightbox {
-  max-width: 96vw;
-  max-height: 96vh;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background: #fff;
-  cursor: zoom-out;
-  outline: none;
-}
-
-.lightbox::backdrop { background: rgba(15, 23, 42, 0.85); }
-
-.lightbox img {
-  display: block;
-  max-width: calc(96vw - 24px);
-  max-height: calc(96vh - 24px);
 }
 
 .search-panel {
@@ -273,7 +252,6 @@ a:hover { text-decoration: underline; }
   background: var(--surface-alt);
 }
 
-.kev-table tbody tr { cursor: pointer; }
 .kev-table tbody tr:hover { background: var(--surface-alt); }
 
 .badge {
@@ -303,17 +281,15 @@ a:hover { text-decoration: underline; }
   font-size: 0.9rem;
 }
 
-.pagination button {
+.pagination a {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
   padding: 6px 14px;
   border-radius: 6px;
-  cursor: pointer;
 }
 
-.pagination button:hover:not(:disabled) { border-color: var(--accent); }
-.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination a:hover { border-color: var(--accent); text-decoration: none; }
 
 .back-link {
   display: inline-block;

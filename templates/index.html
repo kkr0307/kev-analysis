@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}대시보드 · CVE 분석{% endblock %}
+{% block title %}NVD CVE / CISA KEV 대시보드{% endblock %}
 
 {% macro chart_body(key, title) %}
   {% if key in charts %}
     {% set src = url_for('static', filename='images/charts/' ~ key ~ '.png') %}
-    <a class="chart-link" href="{{ src }}" data-title="{{ title }}">
+    <a class="chart-link" href="{{ src }}" target="_blank" title="{{ title }} - 원본 크기로 열기">
       <img class="chart-image" src="{{ src }}" alt="{{ title }}">
     </a>
   {% else %}
@@ -24,7 +24,7 @@
 {% endmacro %}
 
 {% block content %}
-<h1 class="page-title">CVE 취약점 분석</h1>
+<h1 class="page-title">NVD CVE / CISA KEV 대시보드</h1>
 <p class="page-scope">CVE 전체 (NVD, 2023–2026) · 2026년은 집계 중</p>
 
 <section class="kpi-grid">
@@ -61,11 +61,4 @@
   {{ chart_card("cwe_top10", "CWE-79(XSS)가 2위의 3배 이상") }}
   {{ chart_card("top5_cwe_yearly_trend", "CWE-862·284(접근 통제) 증가세") }}
 </div>
-
-<dialog class="lightbox" id="lightbox">
-  <img alt="">
-</dialog>
-{% endblock %}
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}
