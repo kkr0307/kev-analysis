@@ -3,23 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}CISA KEV 대시보드{% endblock %}</title>
+  <title>{% block title %}NVD CVE / CISA KEV 대시보드{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  {% block head %}{% endblock %}
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="brand" href="{{ url_for('main.index') }}">CISA KEV 대시보드</a>
+      <a class="brand" href="{{ url_for('index') }}">NVD CVE / CISA KEV 대시보드</a>
       <nav class="nav-links">
-        <a href="{{ url_for('main.index') }}">대시보드</a>
-        <a href="{{ url_for('main.vulnerabilities') }}">취약점 검색</a>
+        <a href="{{ url_for('index') }}">대시보드</a>
+        <a href="{{ url_for('vulnerabilities') }}">취약점 검색</a>
       </nav>
     </div>
   </header>
   <main class="page">
     {% block content %}{% endblock %}
   </main>
-  {% block scripts %}{% endblock %}
 </body>
 </html>
