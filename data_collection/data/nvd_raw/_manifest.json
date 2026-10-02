@@ -1,0 +1,362 @@
+{
+  "2023-01": {
+    "count": 2565,
+    "collected_at": "2026-10-01T07:25:18+00:00",
+    "pubStartDate": "2023-01-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-01.json",
+    "size_mb": 33.2
+  },
+  "2023-02": {
+    "count": 2474,
+    "collected_at": "2026-10-01T07:27:54+00:00",
+    "pubStartDate": "2023-02-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-02.json",
+    "size_mb": 31.4
+  },
+  "2023-03": {
+    "count": 2783,
+    "collected_at": "2026-10-01T07:29:56+00:00",
+    "pubStartDate": "2023-03-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-03.json",
+    "size_mb": 31.8
+  },
+  "2023-04": {
+    "count": 2363,
+    "collected_at": "2026-10-01T07:30:57+00:00",
+    "pubStartDate": "2023-04-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-04.json",
+    "size_mb": 29.3
+  },
+  "2023-05": {
+    "count": 2734,
+    "collected_at": "2026-10-01T07:32:28+00:00",
+    "pubStartDate": "2023-05-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-05.json",
+    "size_mb": 34.4
+  },
+  "2023-06": {
+    "count": 2405,
+    "collected_at": "2026-10-01T07:36:45+00:00",
+    "pubStartDate": "2023-06-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-06.json",
+    "size_mb": 54.9
+  },
+  "2023-07": {
+    "count": 2363,
+    "collected_at": "2026-10-01T07:38:31+00:00",
+    "pubStartDate": "2023-07-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-07.json",
+    "size_mb": 30.5
+  },
+  "2023-08": {
+    "count": 2518,
+    "collected_at": "2026-10-01T07:40:11+00:00",
+    "pubStartDate": "2023-08-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-08.json",
+    "size_mb": 37.5
+  },
+  "2023-09": {
+    "count": 2828,
+    "collected_at": "2026-10-01T07:42:56+00:00",
+    "pubStartDate": "2023-09-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-09.json",
+    "size_mb": 31.6
+  },
+  "2023-10": {
+    "count": 2722,
+    "collected_at": "2026-10-01T07:45:58+00:00",
+    "pubStartDate": "2023-10-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-10.json",
+    "size_mb": 35.4
+  },
+  "2023-11": {
+    "count": 2508,
+    "collected_at": "2026-10-01T07:49:32+00:00",
+    "pubStartDate": "2023-11-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-11.json",
+    "size_mb": 38.9
+  },
+  "2023-12": {
+    "count": 2686,
+    "collected_at": "2026-10-01T07:52:04+00:00",
+    "pubStartDate": "2023-12-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2023/nvd_2023-12.json",
+    "size_mb": 35.3
+  },
+  "2024-01": {
+    "count": 2647,
+    "collected_at": "2026-10-01T07:54:44+00:00",
+    "pubStartDate": "2024-01-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-01.json",
+    "size_mb": 35.4
+  },
+  "2024-02": {
+    "count": 2906,
+    "collected_at": "2026-10-01T07:57:45+00:00",
+    "pubStartDate": "2024-02-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-02.json",
+    "size_mb": 39.6
+  },
+  "2024-03": {
+    "count": 3352,
+    "collected_at": "2026-10-01T07:59:37+00:00",
+    "pubStartDate": "2024-03-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-03.json",
+    "size_mb": 44.3
+  },
+  "2024-04": {
+    "count": 3735,
+    "collected_at": "2026-10-01T08:04:47+00:00",
+    "pubStartDate": "2024-04-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-04.json",
+    "size_mb": 43.9
+  },
+  "2024-05": {
+    "count": 5103,
+    "collected_at": "2026-10-01T08:09:52+00:00",
+    "pubStartDate": "2024-05-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-05.json",
+    "size_mb": 62.6
+  },
+  "2024-06": {
+    "count": 3173,
+    "collected_at": "2026-10-01T08:13:00+00:00",
+    "pubStartDate": "2024-06-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-06.json",
+    "size_mb": 37.6
+  },
+  "2024-07": {
+    "count": 3174,
+    "collected_at": "2026-10-01T08:16:50+00:00",
+    "pubStartDate": "2024-07-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-07.json",
+    "size_mb": 45.1
+  },
+  "2024-08": {
+    "count": 2945,
+    "collected_at": "2026-10-01T08:20:59+00:00",
+    "pubStartDate": "2024-08-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-08.json",
+    "size_mb": 46.6
+  },
+  "2024-09": {
+    "count": 2540,
+    "collected_at": "2026-10-01T08:24:42+00:00",
+    "pubStartDate": "2024-09-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-09.json",
+    "size_mb": 39.6
+  },
+  "2024-10": {
+    "count": 3595,
+    "collected_at": "2026-10-01T08:29:18+00:00",
+    "pubStartDate": "2024-10-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-10.json",
+    "size_mb": 52.2
+  },
+  "2024-11": {
+    "count": 4086,
+    "collected_at": "2026-10-01T08:32:01+00:00",
+    "pubStartDate": "2024-11-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-11.json",
+    "size_mb": 45.8
+  },
+  "2024-12": {
+    "count": 3448,
+    "collected_at": "2026-10-01T08:35:43+00:00",
+    "pubStartDate": "2024-12-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2024/nvd_2024-12.json",
+    "size_mb": 34.1
+  },
+  "2025-01": {
+    "count": 4415,
+    "collected_at": "2026-10-01T08:37:23+00:00",
+    "pubStartDate": "2025-01-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-01.json",
+    "size_mb": 39.1
+  },
+  "2025-02": {
+    "count": 3831,
+    "collected_at": "2026-10-01T08:39:53+00:00",
+    "pubStartDate": "2025-02-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-02.json",
+    "size_mb": 50.5
+  },
+  "2025-03": {
+    "count": 4166,
+    "collected_at": "2026-10-01T08:41:23+00:00",
+    "pubStartDate": "2025-03-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-03.json",
+    "size_mb": 37.4
+  },
+  "2025-04": {
+    "count": 4142,
+    "collected_at": "2026-10-01T08:42:58+00:00",
+    "pubStartDate": "2025-04-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-04.json",
+    "size_mb": 41.3
+  },
+  "2025-05": {
+    "count": 4264,
+    "collected_at": "2026-10-01T08:44:55+00:00",
+    "pubStartDate": "2025-05-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-05.json",
+    "size_mb": 45.8
+  },
+  "2025-06": {
+    "count": 3799,
+    "collected_at": "2026-10-01T08:46:28+00:00",
+    "pubStartDate": "2025-06-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-06.json",
+    "size_mb": 42.0
+  },
+  "2025-07": {
+    "count": 3933,
+    "collected_at": "2026-10-01T08:50:20+00:00",
+    "pubStartDate": "2025-07-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-07.json",
+    "size_mb": 44.5
+  },
+  "2025-08": {
+    "count": 3737,
+    "collected_at": "2026-10-01T08:52:49+00:00",
+    "pubStartDate": "2025-08-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-08.json",
+    "size_mb": 40.1
+  },
+  "2025-09": {
+    "count": 4537,
+    "collected_at": "2026-10-01T08:56:59+00:00",
+    "pubStartDate": "2025-09-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-09.json",
+    "size_mb": 49.2
+  },
+  "2025-10": {
+    "count": 4389,
+    "collected_at": "2026-10-01T08:59:31+00:00",
+    "pubStartDate": "2025-10-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-10.json",
+    "size_mb": 43.0
+  },
+  "2025-11": {
+    "count": 3116,
+    "collected_at": "2026-10-01T08:59:58+00:00",
+    "pubStartDate": "2025-11-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-11.json",
+    "size_mb": 26.3
+  },
+  "2025-12": {
+    "count": 5643,
+    "collected_at": "2026-10-01T09:02:26+00:00",
+    "pubStartDate": "2025-12-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2025/nvd_2025-12.json",
+    "size_mb": 52.0
+  },
+  "2026-01": {
+    "count": 5143,
+    "collected_at": "2026-10-01T09:04:19+00:00",
+    "pubStartDate": "2026-01-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-01.json",
+    "size_mb": 53.6
+  },
+  "2026-02": {
+    "count": 4808,
+    "collected_at": "2026-10-01T09:05:19+00:00",
+    "pubStartDate": "2026-02-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-02.json",
+    "size_mb": 49.9
+  },
+  "2026-03": {
+    "count": 6304,
+    "collected_at": "2026-10-01T09:07:21+00:00",
+    "pubStartDate": "2026-03-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-03.json",
+    "size_mb": 74.4
+  },
+  "2026-04": {
+    "count": 5885,
+    "collected_at": "2026-10-01T09:08:56+00:00",
+    "pubStartDate": "2026-04-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-04.json",
+    "size_mb": 66.0
+  },
+  "2026-05": {
+    "count": 6985,
+    "collected_at": "2026-10-01T09:09:50+00:00",
+    "pubStartDate": "2026-05-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-05.json",
+    "size_mb": 78.7
+  },
+  "2026-06": {
+    "count": 8001,
+    "collected_at": "2026-10-01T09:13:26+00:00",
+    "pubStartDate": "2026-06-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-06.json",
+    "size_mb": 79.6
+  },
+  "2026-07": {
+    "count": 9919,
+    "collected_at": "2026-10-01T09:17:40+00:00",
+    "pubStartDate": "2026-07-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-07.json",
+    "size_mb": 86.3
+  },
+  "2026-08": {
+    "count": 12719,
+    "collected_at": "2026-10-01T09:22:59+00:00",
+    "pubStartDate": "2026-08-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-08.json",
+    "size_mb": 106.6
+  },
+  "2026-09": {
+    "count": 15074,
+    "collected_at": "2026-10-01T06:27:37+00:00",
+    "pubStartDate": "2026-09-01",
+    "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "file": "2026/nvd_2026-09.json",
+    "size_mb": 130.1
+  }
+}
